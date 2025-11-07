@@ -1,0 +1,383 @@
+---
+title: "R CODES FOR DASHBOARD"
+---
+
+
+Start fresh
+```{r}
+rm(list = ls())
+```
+
+Paste links from GitHub here:
+```{r}
+# paste inside the quotations
+
+gpklink='https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/Gpkgs/Oakland_2.gpkg'
+jsonlink='https://github.com/eamonmadden-sketch/Homework-1/raw/refs/heads/main/worldindicators.json'
+```
+
+Have the maps into R
+```{r}
+library(sf)
+
+CityGrid<-read_sf(gpklink, layer = 'city_grid')
+Oakland_Boundaries<-read_sf(gpklink, layer = 'city_bounds')
+Airbnb_Locations<-read_sf(gpklink, layer = 'airbnb_locations')
+My_Estate<-read_sf(gpklink, layer = 'myEstate')
+
+```
+
+See and save plots:
+
+```{r}
+library(ggplot2)
+library(sf)
+library(scales)
+
+Airbnbs=ggplot() + theme_light() +
+#call map
+geom_sf(data = Oakland_Boundaries) +
+geom_sf(data=Airbnb_Locations,
+alpha=0.9,
+shape=10,
+size=0.5,
+color="red")+
+# adjust datum
+coord_sf(datum = st_crs(Oakland_Boundaries)) +
+# custom X and Y axes
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km'")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs (x = "Easting", y = "Northing") #labels
+
+Airbnbs
+
+```
+
+```{r}
+'''
+dotplot=ggplot() + theme_light() +
+
+geom_sf(data = Oakland_Boundaries, fill="white", color="grey80") +
+
+geom_sf(data=Airbnb_Locations,
+alpha=0.9,
+shape=10,
+size=0.5,
+color="red")+
+coord_sf(datum = st_crs(Oakland_Boundaries)) +
+scale_x_continuous(labels = label_number(scale = 1/1000,
+suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000,
+suffix = " km")) +
+
+labs (x = "Easting", y = "Northing") 
+
+dotplot
+```
+
+```{r}
+
+```
+
+```{r}
+Knn=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = knn10_uniform), color = NA) +
+#
+# Overlay: point layer (bigger and colored for visibility)
+  geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+  
+  
+  
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=IDW_10)+
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+Knn
+```
+```{r}
+'''
+psm_4326 <- st_transform(PSM, crs=4326)
+                         
+PsmLeaf=leaflet() %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircleMarkers(data = psm_4326,
+  fillColor = "red",
+  stroke = T, #border
+  color="red", #border color
+  fillOpacity = 0.5,
+  label = ~Country,
+  radius = ~size)
+
+PsmLeaf
+
+
+```
+```{r}
+IDW=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = IDW_10), color = NA) +
+#
+
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=IDW_10)+
+   geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+IDW
+
+```
+```{r}
+---
+title: "R CODES FOR DASHBOARD"
+---
+
+
+Start fresh
+```{r}
+rm(list = ls())
+```
+
+Paste links from GitHub here:
+```{r}
+# paste inside the quotations
+
+gpklink='https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/Gpkgs/Oakland_2.gpkg'
+jsonlink='https://github.com/eamonmadden-sketch/Homework-1/raw/refs/heads/main/worldindicators.json'
+```
+
+Have the maps into R
+```{r}
+library(sf)
+
+CityGrid<-read_sf(gpklink, layer = 'city_grid')
+Oakland_Boundaries<-read_sf(gpklink, layer = 'city_bounds')
+Airbnb_Locations<-read_sf(gpklink, layer = 'airbnb_locations')
+My_Estate<-read_sf(gpklink, layer = 'myEstate')
+
+```
+
+See and save plots:
+
+```{r}
+library(ggplot2)
+library(sf)
+library(scales)
+
+Airbnbs=ggplot() + theme_light() +
+#call map
+geom_sf(data = Oakland_Boundaries) +
+geom_sf(data=Airbnb_Locations,
+alpha=0.9,
+shape=10,
+size=0.5,
+color="red")+
+# adjust datum
+coord_sf(datum = st_crs(Oakland_Boundaries)) +
+# custom X and Y axes
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km'")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs (x = "Easting", y = "Northing") #labels
+
+Airbnbs
+
+```
+
+```{r}
+IDW=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = IDW_10), color = NA) +
+#
+
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=IDW_10)+
+   geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+IDW
+```
+
+```{r}
+radius_1000=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = radius_1000), color = NA) +
+#
+
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=radius_1000)+
+   geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+radius_1000
+```
+
+```{r}
+Knn=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = knn10_uniform), color = NA) +
+#
+# Overlay: point layer (bigger and colored for visibility)
+  geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+  
+  
+  
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=knn10_uniform)+
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+Knn
+```
+
+
+```{r}
+nearest=ggplot() + theme_light() +
+
+#base
+geom_sf(data = CityGrid, aes(fill = nearest), color = NA) +
+#
+
+coord_sf(datum = st_crs(CityGrid$geom))+
+aes(fill=nearest)+
+   geom_sf(
+    data = My_Estate,
+    color = "black",        # outline color
+    fill = "red",        # interior color (works if geometry type = POINT)
+    shape = 21,             # filled circle
+    size = 3,
+  ) +
+scale_fill_viridis_c(
+    option = "plasma",    # or "viridis", "magma", "cividis"
+    direction = 1,
+    name = "Airbnb Average Price"
+  ) +
+  
+scale_x_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+scale_y_continuous(labels = label_number(scale = 1/1000, suffix = " km")) +
+labs(x = "Easting", y = "Northing", fill="Mobile phone user density")
+
+nearest
+
+```
+
+
+Saving
+
+```{r}
+# Create an "Outputs" folder if it doesn't exist
+output_dir <- file.path(getwd(), "Outputs")
+if (!dir.exists(output_dir)) dir.create(output_dir)
+
+# Save your objects
+saveRDS(Airbnbs, file = file.path(output_dir, "Airbnb_Locations.rds"))
+saveRDS(Knn,     file = file.path(output_dir, "Knn.rds"))
+saveRDS(IDW,     file = file.path(output_dir, "IDW.rds"))
+saveRDS(nearest,     file = file.path(output_dir, "nearest.rds"))
+saveRDS(radius_1000,     file = file.path(output_dir, "radius_1000.rds"))
+# Print confirmation
+cat("Files saved to:\n", output_dir, "\n")
+
+# (Optional) list them to confirm
+list.files(output_dir, pattern = "\\.rds$")
+```
+ 
+You are done!
+
+```
+
+Saving
+
+```{r}
+# Create an "Outputs" folder if it doesn't exist
+output_dir <- file.path(getwd(), "Outputs")
+if (!dir.exists(output_dir)) dir.create(output_dir)
+
+# Save your objects
+saveRDS(Airbnbs, file = file.path(output_dir, "Airbnb_Locations.rds"))
+saveRDS(Knn,     file = file.path(output_dir, "Knn.rds"))
+saveRDS(IDW,     file = file.path(output_dir, "IDW.rds"))
+saveRDS(nearest,     file = file.path(output_dir, "nearest.rds"))
+saveRDS(radius_1000,     file = file.path(output_dir, "radius_1000.rds"))
+
+# Print confirmation
+cat("Files saved to:\n", output_dir, "\n")
+
+# (Optional) list them to confirm
+list.files(output_dir, pattern = "\\.rds$")
+```
+ 
+You are done!

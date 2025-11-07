@@ -1,0 +1,69 @@
+---
+title: "THEMATICS - tabs - Eamon Madden"
+output:
+  flexdashboard::flex_dashboard:
+    navbar:
+      - { icon: "fa-github", href: "https://github.com/eamonmadden-sketch/Homework-2", align: right }
+
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard) # always
+```
+
+## Sidebar {.sidebar}
+
+Airbnb price map in Oakland CA. By Eamon Madden, using data from insideairbnb.com and oaklandca.gov. According to the spatial interpolation m I should charge 152 USD per night based on the Knn method, 141 from the IDW method, 142 from the nearest method, and 160 from the radius 1000 method
+
+## Column {.tabset .tabset-fade}
+
+
+
+```{r}
+map1link ='https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/RDS%20Outputs/Airbnb_Locations.rds'
+viz1=url(map1link)
+
+map2link ='https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/RDS%20Outputs/Knn.rds'
+viz2=url(map2link)
+
+map3link ='https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/RDS%20Outputs/IDW.rds'
+viz3=url(map3link)
+
+map4link = 'https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/RDS%20Outputs/nearest.rds'
+viz4=url(map4link)
+
+map5link = 'https://github.com/eamonmadden-sketch/Homework-2/raw/refs/heads/main/RDS%20Outputs/radius_1000.rds'
+viz5=url(map5link)
+```
+
+### Airbnb Locations
+
+```{r}
+readRDS(viz1)
+```
+
+### Calculating price with KNN method 
+
+```{r}
+readRDS(viz2)
+```
+
+### Calculating price with IDW method
+
+```{r}
+readRDS(viz3)
+```
+
+### Calculating price with nearest method
+
+```{r}
+readRDS(viz4)
+```
+
+### Calculating price with radius 1000 method
+
+```{r}
+map5 <- readRDS(viz5)
+print(map5)
+```
+
